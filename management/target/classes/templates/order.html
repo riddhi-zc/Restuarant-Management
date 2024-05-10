@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Restuarant - Menu</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" rel="stylesheet">
+
+    <!-- Cu stom styles for this template-->
+    <link href="/static/css/sb-admin-2.min.css" rel="stylesheet">
+    <style>
+    .error {
+    color:#e74a3b !important;
+    font-size:80% !important;
+    position: relative !important;
+    line-height: 1 !important;
+    width: 12.5rem !important;
+}
+.bootstrap-tagsinput > input[type=text]
+{
+    display: flex !important;
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #6e707e;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+ #categoryInput {
+      width: 100%; /* Adjust the width as needed */
+    }
+    .bootstrap-tagsinput {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    display: flex !important;
+    padding: 4px 6px;
+    color: #555;
+    vertical-align: middle;
+    border-radius: 4px;
+    max-width: 100%;
+    line-height: 22px;
+    cursor: text;
+}
+</style>
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <div th:replace="admin-sidebar"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <div th:replace="admin-navbar"></div>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <div class="content-wrapper">
+                    <div class="row">
+
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Order Information</h4>
+                                    <button type="button" class="btn btn-primary"  style="float:right;margin-bottom:10px;" id="addMenuButton" data-toggle="modal" data-target="#addItemModal">
+                                        Add Item
+                                    </button>
+                                    <table class="table table-striped" id="menuInfo">
+                                        <thead>
+                                        <tr>
+                                            <th> Category</th>
+                                            <th> Menu Item</th>
+                                            <th> Price </th>
+                                            <th>Quantity</th>
+                                            <th> Actions</th>
+
+                                        </tr>
+                                        </thead>
+                                        <tbody id="body"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- modal for adding new menu -->
+    <div class="modal fade bd-example-modal-lg" id="placeOrder" tabindex="-1" role="dialog" aria-labelledby="placeOrderLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="placeOrderHeader">Place an Order</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form for adding new item -->
+                    <form method="post" name="menuForm" id="orderForm" novalidate="novalidate">
+                        <!--<select id="example-getting-started" multiple="multiple">
+                            <option value="cheese">Cheese</option>
+                            <option value="tomatoes">Tomatoes</option>
+                            <option value="mozarella">Mozzarella</option>
+                            <option value="mushrooms">Mushrooms</option>
+                            <option value="pepperoni">Pepperoni</option>
+                            <option value="onions">Onions</option>
+                        </select>-->
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">Category Name </label>
+                            <select class="form-control" id="categoryName" name="categoryName">
+                                <option value="0">Select categoryName</option>
+                                <option th:each="category : ${categories}" th:value="${category.cid}" th:text="${category.categoryNames}"></option>
+                            </select>
+
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Item</label>
+                            <select class="form-control" id="itemName" name="itemName" >
+                                <option value="0">Select itemName</option>
+                            </select>
+
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Quantity</label>
+                            <input type="text" class="form-control" id="itemQuantity" name="itemQuantity" placeholder="2">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Price</label>
+                            <input type="text" class="form-control" id="itemPrice" name="itemPrice" placeholder="80.00">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="addButton">Add Order </button>
+                        <button type="button" class="btn btn-primary" id="viewTotal">Total Amount</button>
+                        <button  type="submit"  class="btn btn-primary" id="updateButton" style="display:none;">Edit Order</button>
+                    </form>
+                    <div id="insertedItem">
+                        <table class="table table-striped mt-5" id="requiredItems">
+                            <thead>
+                            <tr>
+                                <th> Category</th>
+                                <th> Menu Item</th>
+                                <th> Price </th>
+                                <th>Quantity</th>
+                                <th> Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody id="itemList"></tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- content-wrapper ends -->
+    <!-- partial:partials/_footer.html -->
+
+    <!-- partial -->
+</div>
+<div th:replace="footer"></div>
+<!-- main-panel ends -->
+</div>
+<!-- page-body-wrapper ends -->
+</div>
+
+<!-- partial -->
+
+<!-- plugins:js -->
+<script src="/static/vendor/jquery/jquery.min.js"></script>
+<script src=https://code.jquery.com/jquery-3.6.0.min.js></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="/static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+<script src="https://unpkg.com/sweetalert2@7.8.2/dist/sweetalert2.all.js"></script>
+
+<script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Include Bootstrap JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap Tags Input JS -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>-->
+
+<!-- endinject -->
+<script type="text/javascript" src="/static/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript" src="/static/js/admin/order.js"></script>
+
+
+
+
+</body>
+</html>

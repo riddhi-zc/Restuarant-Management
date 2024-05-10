@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: riddh
+Build-Jdk: 17.0.10
+Implementation-Title: management
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.resturant
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-boot
+ -starter-parent/management
+Created-By: Maven Integration for Eclipse
+
